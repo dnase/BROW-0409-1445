@@ -1,0 +1,3 @@
+class review::motd {
+
+}
