@@ -2,7 +2,8 @@
 <head>
 </head>
 <body>
+  <h1>We're going to use the user <%= $nginx::user %></h1>
   <h2>My hostname is <%= $hostname %></h2>
-  <h3>My IP address is <%= $ipaddress %></h3>
+  <h3>My IP address is <%= $::ipaddress %></h3>
 </body>
 </html>
