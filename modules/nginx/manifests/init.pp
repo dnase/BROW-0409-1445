@@ -39,14 +39,20 @@ class nginx {
     path   => $docroot,
   }
   file { 'index.html':
-    ensure => file,
-    path   => "${docroot}/index.html",
-    source => 'puppet:///modules/nginx/index.html',
+    ensure  => file,
+    path    => "${docroot}/index.html",
+    content => epp('nginx/index.html.epp'),
   }
   file { 'nginx.conf':
-    ensure  => file,
-    path    => "${confdir}/nginx.conf",
-    source  => "puppet:///modules/nginx/${::osfamily}.conf",
+    ensure     => file,
+    path       => "${confdir}/nginx.conf",
+    content    => epp('nginx/nginx.conf.epp', {
+      user     => $user,
+      docroot  => $docroot,
+      confdir  => $confdir,
+      blockdir => $blockdir,
+      logdir   => $logdir,
+    }),
     require => Package[$package],
   }
   service { $service:

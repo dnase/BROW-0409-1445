@@ -1,0 +1,8 @@
+<html>
+<head>
+</head>
+<body>
+  <h2>My hostname is <%= $hostname %></h2>
+  <h3>My IP address is <%= $ipaddress %></h3>
+</body>
+</html>
