@@ -1,20 +1,6 @@
     server {
-        listen       80 default_server;
-        listen       [::]:80 default_server;
-        server_name  _;
+        listen       <%= $port %><% if $title == 'default' { %> default_server<% } %>;
+        server_name  <%= $server_name %>;
         root         <%= $docroot %>;
 
-        # Load configuration files for the default server block.
-        include <%= $confdir %>/default.d/*.conf;
-
-        location / {
-        }
-
-        error_page 404 /404.html;
-            location = /40x.html {
-        }
-
-        error_page 500 502 503 504 /50x.html;
-            location = /50x.html {
-        }
     }

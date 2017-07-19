@@ -34,21 +34,14 @@ class nginx {
   package { $package:
     ensure => latest,
   }
-  file { 'docroot':
+  file { "${docroot}/vhosts":
     ensure => directory,
-    path   => $docroot,
-  }
-  file { 'index.html':
-    ensure  => file,
-    path    => "${docroot}/index.html",
-    content => epp('nginx/index.html.epp'),
   }
   file { 'nginx.conf':
     ensure     => file,
     path       => "${confdir}/nginx.conf",
     content    => epp('nginx/nginx.conf.epp', {
       user     => $user,
-      docroot  => $docroot,
       confdir  => $confdir,
       blockdir => $blockdir,
       logdir   => $logdir,
@@ -59,6 +52,10 @@ class nginx {
     ensure    => running,
     enable    => true,
     subscribe => File['nginx.conf'],
+  }
+  nginx::vhost { 'default':
+    docroot     => $docroot,
+    server_name => $::fqdn,
   }
 }
 
