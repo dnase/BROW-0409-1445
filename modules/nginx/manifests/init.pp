@@ -1,38 +1,15 @@
 class nginx (
-  Optional[String] $root = undef,
-  Boolean $highperf = true,
-) {
-  case $facts['os']['family'] {
-    'RedHat', 'Debian': {
-      $package = 'nginx'
-      $owner = 'root'
-      $group = 'root'
-      $default_docroot = '/var/www'
-      $confdir = '/etc/nginx'
-      $blockdir = '/etc/nginx/conf.d'
-      $logdir = '/var/log/nginx'
-      $service = 'nginx'
-    }
-    'windows': {
-      $package = 'nginx-service'
-      $owner = 'Administrator'
-      $group = 'Administators'
-      $default_docroot = 'C:/ProgramData/nginx/html'
-      $confdir = 'C:/ProgramData/nginx/conf'
-      $blockdir = 'C:/ProgramData/nginx/conf.d'
-      $logdir = 'C:/ProgramData/nginx/logs'
-      $service = 'nginx'
-    }
-  }
-  $docroot = $root ? {
-    undef   => $default_docroot,
-    default => $root,
-  }
-  $user = $facts['os']['family'] ? {
-    'windows' => 'nobody',
-    'Debian'  => 'www-data',
-    default   => 'nginx',
-  }
+  Boolean $highperf = $nginx::params::highperf,
+  String $package = $nginx::params::package,
+  String $owner = $nginx::params::owner,
+  String $group = $nginx::params::group,
+  String $docroot = $nginx::params::docroot,
+  String $confdir = $nginx::params::confdir,
+  String $blockdir = $nginx::params::blockdir,
+  String $logdir = $nginx::params::logdir,
+  String $service = $nginx::params::service,
+  String $user = $nginx::params::user,
+) inherits nginx::params {
   File {
     owner => $owner,
     group => $group,
@@ -53,8 +30,8 @@ class nginx (
       blockdir => $blockdir,
       logdir   => $logdir,
       highperf => $highperf,
-    }),
-    require => Package[$package],
+      }),
+      require => Package[$package],
   }
   service { $service:
     ensure    => running,
@@ -66,19 +43,3 @@ class nginx (
     server_name => $::fqdn,
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
